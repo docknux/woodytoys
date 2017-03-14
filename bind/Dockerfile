@@ -9,4 +9,6 @@ RUN set -x \
 
 EXPOSE 53/udp
 EXPOSE 53/tcp
+
+COPY ./dns/authoritative/* /
 CMD ["named", "-g", "-c", "/etc/bind/named.conf", "-u", "named"]
