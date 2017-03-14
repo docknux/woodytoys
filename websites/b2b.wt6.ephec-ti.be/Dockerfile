@@ -17,5 +17,7 @@ WORKDIR /usr/local/apache2
 RUN set -x \
     && sed -i -e '#^<Directory "/usr/local/apache2/htdocs">$#b' -e '0,/AllowOverride/ s/AllowOverride None/AllowOverride All/' conf/httpd.conf
 
+COPY ./public-html/ /usr/local/apache2/htdocs/
+
 EXPOSE 80
 CMD ["httpd-foreground"]
