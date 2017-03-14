@@ -1,4 +1,4 @@
-FROM httpd:alpine
+FROM httpd:2.4-alpine
 MAINTAINER Denis Pettens <denis.pettens@gmail.com>
 
 # ServerRoot of apache
