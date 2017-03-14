@@ -14,6 +14,10 @@ sudo ufw allow 4789/udp
 sudo ufw allow 3000/tcp
 sudo ufw allow 3001/tcp
 sudo ufw allow 3002/tcp
+sudo ufw allow 53/tcp
+sudo ufw allow 53/udp
+sudo ufw allow 80/tcp
+
 
 #Apply rules
 sudo ufw reload
