@@ -16,6 +16,6 @@ ns1         IN      A       151.80.119.135
 
 ; Web domain
 @           IN      A       151.80.119.135
-www         IN      CNAME   www
+www         IN      CNAME   @
 b2b         IN      A       151.80.119.135
 intranet    IN      A       151.80.119.135
