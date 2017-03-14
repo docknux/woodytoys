@@ -19,14 +19,14 @@ try {
 
    // use exec() because no results are returned
    $conn->exec($sql);
-   echo "Table users created successfully";
+   echo "Table users created successfully\n\n";
 
    $sql = "INSERT INTO users (firstname, lastname, email) VALUES ('John', 'Doe', 'john@example.com')";
    // use exec() because no results are returned
    $conn->exec($sql);
-   echo "New record created successfully";
+   echo "New record created successfully\n\n";
 
-   $reponse = $bdd->query('SELECT * FROM users');
+   $reponse = $conn->query('SELECT * FROM users');
    $donnees = $reponse->fetch();
 
    while ($donnees = $reponse->fetch())
