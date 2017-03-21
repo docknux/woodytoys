@@ -1,1 +1,2 @@
-Should NOT be part of the swarm. Run with ``docker run -it --net=container:<container-id> docknux/machine-test bash```where <container-id> is the container ID  whose network stack you want to join.
+The machine starts an sshd service on the port 4022. You should open that port with docker swarm; but probably not on the VPS's firewall (this allows localhost to connect to the container.)
+The login:password is test:test.
