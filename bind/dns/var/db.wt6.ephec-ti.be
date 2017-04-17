@@ -14,6 +14,10 @@ $ORIGIN wt6.ephec-ti.be.
 @           IN      NS      ns1
 ns1         IN      A       151.80.119.135
 
+; Mail Server
+@	    IN      MX      10    mail
+mail	    IN	    A       151.80.119.131
+
 ; Web domain
 @           IN      A       151.80.119.135
 www         IN      CNAME   @
