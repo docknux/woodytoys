@@ -19,6 +19,8 @@ sudo ufw allow 53/udp
 sudo ufw allow 80/tcp
 
 #For mail
+sudo ufw allow 25/tcp
+sudo ufw allow 587/tcp
 sudo ufw allow 143/tcp
 sudo ufw allow 993/tcp
 sudo ufw allow 110/tcp
