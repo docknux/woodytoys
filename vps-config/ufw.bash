@@ -27,6 +27,13 @@ sudo ufw allow 993/tcp
 sudo ufw allow 110/tcp
 sudo ufw allow 995/tcp
 
+#For Asterisk
+sudo ufw allow 10000:10009/tcp
+sudo ufw allow 10000:10009/udp
+sudo ufw allow 5060/udp
+sudo ufw allow 4569/udp
+sudo ufw allow 5036/udp
+
 #Apply rules
 sudo ufw reload
 sudo ufw enable
