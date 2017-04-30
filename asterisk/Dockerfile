@@ -8,4 +8,4 @@ EXPOSE 10000-10009
 
 VOLUME /etc/asterisk
 
-CMD /usr/sbin/asterisk -f
+CMD /usr/sbin/asterisk -vvvvgc
