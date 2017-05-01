@@ -10,6 +10,7 @@ RUN set -x \
 EXPOSE 53/udp
 EXPOSE 53/tcp
 
-COPY ./dns/etc/named.conf /etc/bind/named.conf
-COPY ./dns/var/db.wt6.ephec-ti.be /var/bind/
+VOLUME /etc/bind
+VOLUME /var/bind
+
 CMD ["named", "-g", "-c", "/etc/bind/named.conf", "-u", "named"]
