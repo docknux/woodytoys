@@ -1,3 +1,6 @@
 FROM httpd:alpine
-COPY ./public-html/ /usr/local/apache2/htdocs/
-EXPOSE 80
+MAINTAINER Denis Pettens <denis.pettens@gmail.com>
+
+EXPOSE 80/tcp
+
+COPY ./public_html/ /usr/local/apache2/htdocs/
