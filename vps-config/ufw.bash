@@ -1,5 +1,12 @@
 #!/bin/bash
 
+sudo ufw reset
+
+#Spammers (SIP)
+sudo ufw deny from 85.93.93.173 to any
+sudo ufw deny from 172.17.0.1 to any
+sudo ufw deny from 62.138.14.22 to any
+
 #Misc ports
 sudo ufw allow 22/tcp
 
@@ -30,8 +37,11 @@ sudo ufw allow 995/tcp
 #For Asterisk
 sudo ufw allow 10000:10009/tcp
 sudo ufw allow 10000:10009/udp
+sudo ufw allow 5060/tcp
 sudo ufw allow 5060/udp
+sudo ufw allow 4569/tcp
 sudo ufw allow 4569/udp
+sudo ufw allow 5036/tcp
 sudo ufw allow 5036/udp
 
 #Apply rules
