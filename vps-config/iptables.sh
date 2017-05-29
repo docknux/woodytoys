@@ -4,9 +4,9 @@
 ## VARIABLES ##
 ###############
 
-LAN="br-ef7ca0be5b7c"
+LAN="br-da5103bc5d71"
 DMZ="br-45f0c94a0363"
-DNS="br-c2f2f737c56c"
+DNS="br-29f56b220940"
 DOCKER0="docker0"
 INTERNET="enp0s3"
 
