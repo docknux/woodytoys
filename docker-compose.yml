@@ -1,0 +1,152 @@
+version: "3"
+
+services:
+  # DMZ
+  local-dns-soa:
+    container_name: local-dns-soa
+    image: docknux/woodytoys-bind
+    volumes:
+      - ./bind/configFiles/local-dns-soa/etc/named.conf:/etc/bind/named.conf:ro
+      - ./bind/configFiles/local-dns-soa/var/db.wt6.ephec-ti.be:/var/bind/db.wt6.ephec-ti.be:ro
+      - /srv/docker/bind/local-dns-soa:/var/log/bind:rw
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      production:
+        ipv4_address: 10.40.0.5
+  apache-proxy:
+    container_name: apache-proxy
+    image: docknux/woodytoys-apache-proxy
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      production:
+        ipv4_address: 10.40.0.10
+  www:
+    container_name: www
+    hostname: www.wt6.ephec-ti.be
+    image: docknux/woodytoys-www
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      production:
+        ipv4_address: 10.40.0.11
+  b2b:
+    container_name: b2b
+    hostname: b2b.wt6.ephec-ti.be
+    image: docknux/woodytoys-b2b
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      production:
+        ipv4_address: 10.40.0.12
+  db:
+    container_name: db
+    hostname: db.wt6.ephec-ti.be
+    image: mysql
+    environment:
+      - MYSQL_USER=b2b
+      - MYSQL_PASSWORD=b2b
+      - MYSQL_DATABASE=b2b
+      - MYSQL_ROOT_PASSWORD=true
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      production:
+        ipv4_address: 10.40.0.13
+
+  # DNS
+  extern-dns-cache:
+    container_name: extern-dns-cache
+    image: docknux/woodytoys-bind
+    volumes:
+      - ./bind/configFiles/extern-dns-cache/etc/named.conf:/etc/bind/named.conf:ro
+      - /srv/docker/bind/extern-dns-cache:/var/log/bind:rw
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      dns:
+        ipv4_address: 10.50.0.5
+  extern-dns-soa:
+    container_name: extern-dns-soa
+    image: docknux/woodytoys-bind
+    volumes:
+      - ./bind/configFiles/extern-dns-soa/etc/named.conf:/etc/bind/named.conf:ro
+      - ./bind/configFiles/extern-dns-soa/var/db.wt6.ephec-ti.be:/var/bind/db.wt6.ephec-ti.be:ro
+      - /srv/docker/bind/extern-dns-soa:/var/log/bind:rw
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      dns:
+        ipv4_address: 10.50.0.6
+
+  # LAN
+  local-dns-cache:
+    container_name: local-dns-cache
+    image: docknux/woodytoys-bind
+    volumes:
+      - ./bind/configFiles/local-dns-cache/etc/named.conf:/etc/bind/named.conf:ro
+      - /srv/docker/bind/local-dns-cache:/var/log/bind:rw
+      - /etc/localtime:/etc/localtime:ro
+    dns: 10.0.0.5
+    networks:
+      lan:
+        ipv4_address: 10.0.0.5
+  squid:
+    container_name: squid
+    hostname: squid.wt6.ephec-ti.be
+    #image: sameersbn/squid
+    build: ./squid
+    volumes:
+      - ./squid/configFiles/squid.conf:/etc/squid3/squid.conf:ro
+      - ./squid/configFiles/denydomain:/etc/squid3/denydomain:ro
+      - ./squid/configFiles/users:/etc/squid3/users:rw
+      - /srv/docker/squid/cache:/var/spool/squid3:rw
+      - /srv/docker/squid/logs:/var/log/squid3:rw
+      - /etc/localtime:/etc/localtime:ro
+    dns: 10.0.0.5
+    networks:
+      lan:
+        ipv4_address: 10.0.0.10
+  intranet:
+    container_name: intranet
+    hostname: intranet.wt6.ephec-ti.be
+    image: docknux/woodytoys-intranet
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    dns: 10.0.0.5
+    networks:
+      lan:
+        ipv4_address: 10.0.0.15
+  employee-1:
+    container_name: employee-1
+    image: docknux/machine-test
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    dns: 10.0.0.5
+    networks:
+      lan:
+        ipv4_address: 10.0.0.42
+  admin-1:
+    container_name: admin-1
+    image: docknux/machine-test
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    dns: 10.0.0.5
+    networks:
+      lan:
+        ipv4_address: 10.0.0.80
+
+networks:
+  lan:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.0.0.0/23
+  production:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.40.0.0/24
+  dns:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.50.0.0/24
