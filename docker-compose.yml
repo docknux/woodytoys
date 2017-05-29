@@ -92,8 +92,7 @@ services:
   squid:
     container_name: squid
     hostname: squid.wt6.ephec-ti.be
-    #image: sameersbn/squid
-    build: ./squid
+    image: docknux/woodytoys-squid
     volumes:
       - ./squid/configFiles/squid.conf:/etc/squid3/squid.conf:ro
       - ./squid/configFiles/denydomain:/etc/squid3/denydomain:ro
