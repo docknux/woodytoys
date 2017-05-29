@@ -28,4 +28,4 @@ ENV HTTP_PROXY=http://squid.wt6.ephec-ti.be:3128/ \
 
 EXPOSE 4022
 
-CMD ["/usr/sbin/sshd", "-p", "4022"]
+CMD ["/usr/sbin/sshd", "-D", "-p", "4022"]
