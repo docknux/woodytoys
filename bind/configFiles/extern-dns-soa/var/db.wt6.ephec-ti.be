@@ -3,7 +3,7 @@ $ORIGIN wt6.ephec-ti.be.
 
 ; SOA
 @           IN      SOA     ns1.wt6-ephec-ti.be     sysadmin.wt6.ephec-ti.be (
-                                    2017052601  ; serial
+                                    2017052901  ; serial
                                     86400       ; refesh (1 day)
                                     3600        ; retry (1 hour)
                                     3600000     ; expire (41 days)
@@ -14,7 +14,11 @@ $ORIGIN wt6.ephec-ti.be.
 @           IN      NS      ns1
 ns1         IN      A       151.80.119.135
 
-; Web domain
+; Mail Server
+@	        IN      MX      10              mail
+mail	    IN	    A       151.80.119.135
+
+; Web Domain
 @           IN      A       151.80.119.135
 www         IN      CNAME   @
 b2b         IN      A       151.80.119.135
