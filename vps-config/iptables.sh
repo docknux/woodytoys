@@ -22,7 +22,7 @@ LOCAL_DNS_SOA="10.40.0.5"
 
 APACHE_PROXY="10.40.0.10"
 SQUID_PROXY="10.0.0.10"
-EMPLOYEE_1="10.0.0.42"
+ADMIN_1="10.0.0.80"
 
 ####################
 ## INITIALIZATION ##
@@ -92,7 +92,7 @@ iptables -t nat -A PREROUTING -i $INTERNET -p tcp --dport 53 -j DNAT --to $EXTER
 iptables -t nat -A PREROUTING -i $INTERNET -p tcp --dport 80 -j DNAT --to $APACHE_PROXY
 
 # Forward port 4022 to employee-1
-iptables -t nat -A PREROUTING -i $INTERNET -p tcp --dport 4022 -j DNAT --to $EMPLOYEE_1
+iptables -t nat -A PREROUTING -i $INTERNET -p tcp --dport 4022 -j DNAT --to $ADMIN_1
 
 ##################
 ## DOCKER BUILD ##
@@ -191,6 +191,6 @@ iptables -A FORWARD -i $LAN -o $INTERNET -p tcp -s $LAN_SUBNET --dport 443 -m st
 iptables -A FORWARD -i $INTERNET -o $LAN -p tcp -d $LAN_SUBNET --sport 443 -m state --state ESTABLISHED,RELATED -j ACCEPT
 
 # Allow HTTP from internet to employee-1
-iptables -A FORWARD -i $INTERNET -p tcp -d $EMPLOYEE_1 --dport 4022 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
-iptables -A FORWARD -o $INTERNET -p tcp -s $EMPLOYEE_1 --sport 4022 -m state --state ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -i $INTERNET -p tcp -d $ADMIN_1 --dport 4022 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -o $INTERNET -p tcp -s $ADMIN_1 --sport 4022 -m state --state ESTABLISHED,RELATED -j ACCEPT
 
