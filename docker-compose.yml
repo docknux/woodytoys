@@ -117,7 +117,7 @@ services:
         ipv4_address: 10.0.0.15
   employee-1:
     container_name: employee-1
-    image: docknux/machine-test
+    image: docknux/woodytoys-desktop
     volumes:
       - /etc/localtime:/etc/localtime:ro
     dns: 10.0.0.5
@@ -126,7 +126,7 @@ services:
         ipv4_address: 10.0.0.42
   admin-1:
     container_name: admin-1
-    image: docknux/machine-test
+    image: docknux/woodytoys-desktop
     volumes:
       - /etc/localtime:/etc/localtime:ro
     dns: 10.0.0.5
