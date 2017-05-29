@@ -10,4 +10,4 @@ RUN set -x \
 EXPOSE 53/udp
 EXPOSE 53/tcp
 
-CMD ["named", "-g", "-c", "/etc/bind/named.conf"]
+CMD ["named", "-4", "-g", "-c", "/etc/bind/named.conf"]
