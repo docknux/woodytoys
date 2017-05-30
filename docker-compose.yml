@@ -8,7 +8,7 @@ services:
     volumes:
       - ./bind/configFiles/local-dns-soa/etc/named.conf:/etc/bind/named.conf:ro
       - ./bind/configFiles/local-dns-soa/var/db.wt6.ephec-ti.be:/var/bind/db.wt6.ephec-ti.be:ro
-      - /srv/docker/bind/local-dns-soa:/var/log/bind:rw
+      - /srv/docker/bind/logs/local-dns-soa:/var/log/bind:rw
       - /etc/localtime:/etc/localtime:ro
     networks:
       production:
@@ -17,7 +17,7 @@ services:
     container_name: apache-proxy
     image: docknux/woodytoys-apache-proxy
     volumes:
-      - /srv/docker/apache:/usr/local/apache2/logs:rw
+      - /srv/docker/apache/logs:/usr/local/apache2/logs:rw
       - /etc/localtime:/etc/localtime:ro
     networks:
       production:
@@ -50,7 +50,8 @@ services:
       - MYSQL_DATABASE=b2b
       - MYSQL_ROOT_PASSWORD=true
     volumes:
-      - /srv/docker/db:/var/log/mysql:rw
+      - /srv/docker/db/data:/var/lib/mysql:rw
+      - /srv/docker/db/logs:/var/log/mysql:rw
       - /etc/localtime:/etc/localtime:ro
     networks:
       production:
@@ -62,7 +63,7 @@ services:
     image: docknux/woodytoys-bind
     volumes:
       - ./bind/configFiles/extern-dns-cache/etc/named.conf:/etc/bind/named.conf:ro
-      - /srv/docker/bind/extern-dns-cache:/var/log/bind:rw
+      - /srv/docker/bind/logs/extern-dns-cache:/var/log/bind:rw
       - /etc/localtime:/etc/localtime:ro
     networks:
       dns:
@@ -73,7 +74,7 @@ services:
     volumes:
       - ./bind/configFiles/extern-dns-soa/etc/named.conf:/etc/bind/named.conf:ro
       - ./bind/configFiles/extern-dns-soa/var/db.wt6.ephec-ti.be:/var/bind/db.wt6.ephec-ti.be:ro
-      - /srv/docker/bind/extern-dns-soa:/var/log/bind:rw
+      - /srv/docker/bind/logs/extern-dns-soa:/var/log/bind:rw
       - /etc/localtime:/etc/localtime:ro
     networks:
       dns:
@@ -85,7 +86,7 @@ services:
     image: docknux/woodytoys-bind
     volumes:
       - ./bind/configFiles/local-dns-cache/etc/named.conf:/etc/bind/named.conf:ro
-      - /srv/docker/bind/local-dns-cache:/var/log/bind:rw
+      - /srv/docker/bind/logs/local-dns-cache:/var/log/bind:rw
       - /etc/localtime:/etc/localtime:ro
     dns: 10.0.0.5
     networks:
