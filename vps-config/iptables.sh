@@ -5,15 +5,15 @@
 ###############
 
 LAN="br-da5103bc5d71"
-DMZ="br-45f0c94a0363"
+DMZ="br-9a45e661987e"
 DNS="br-29f56b220940"
 DOCKER0="docker0"
-INTERNET="enp0s3"
+INTERNET="eth0"
 
 LAN_SUBNET="10.0.0.0/23"
 DMZ_SUBNET="10.40.0.0/24"
 DNS_SUBNET="10.50.0.0/24"
-DOCKER_SUBNET="172.17.0.0/16 "
+DOCKER0_SUBNET="172.17.0.0/16"
 
 EXTERN_DNS_CACHE="10.50.0.5"
 EXTERN_DNS_SOA="10.50.0.6"
@@ -46,10 +46,10 @@ iptables -t nat -P POSTROUTING ACCEPT
 iptables -t nat -P OUTPUT ACCEPT
 
 # Set output translation rules for internet
-iptables -t nat -A POSTROUTING -o $INTERNET -s $LAN_SUBNET -j MASQUERADE
-iptables -t nat -A POSTROUTING -o $INTERNET -s $DMZ_SUBNET -j MASQUERADE
-iptables -t nat -A POSTROUTING -o $INTERNET -s $DNS_SUBNET -j MASQUERADE
-iptables -t nat -A POSTROUTING -o $INTERNET -s $DOCKER_SUBNET -j MASQUERADE
+iptables -t nat -A POSTROUTING -o $INTERNET -s $LAN_SUBNET     -j MASQUERADE
+iptables -t nat -A POSTROUTING -o $INTERNET -s $DMZ_SUBNET     -j MASQUERADE
+iptables -t nat -A POSTROUTING -o $INTERNET -s $DNS_SUBNET     -j MASQUERADE
+iptables -t nat -A POSTROUTING -o $INTERNET -s $DOCKER0_SUBNET -j MASQUERADE
 
 #########
 ## VPS ##
@@ -64,14 +64,15 @@ iptables -A INPUT  -i $INTERNET -p icmp -j ACCEPT
 iptables -A OUTPUT -o $INTERNET -p icmp -j ACCEPT
 
 # Allow input SSH
-iptables -A INPUT  -i $INTERNET -p tcp --dport 22 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
-iptables -A OUTPUT -o $INTERNET -p tcp --sport 22 -m state --state ESTABLISHED,RELATED -j ACCEPT
+iptables -A INPUT  -i $INTERNET -p tcp --dport 22 -j ACCEPT
+iptables -A OUTPUT -o $INTERNET -p tcp --sport 22 -j ACCEPT
 
 # Allow output DNS
 iptables -A INPUT  -i $INTERNET -p udp --sport 53 -m state --state ESTABLISHED,RELATED -j ACCEPT
 iptables -A INPUT  -i $INTERNET -p tcp --sport 53 -m state --state ESTABLISHED,RELATED -j ACCEPT
 iptables -A OUTPUT -o $INTERNET -p udp --dport 53 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
 iptables -A OUTPUT -o $INTERNET -p tcp --dport 53 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+
 # Allow output HTTP
 iptables -A INPUT  -i $INTERNET -p tcp --sport 80 -m state --state ESTABLISHED,RELATED -j ACCEPT
 iptables -A OUTPUT -o $INTERNET -p tcp --dport 80 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
@@ -99,18 +100,18 @@ iptables -t nat -A PREROUTING -i $INTERNET -p tcp --dport 4022 -j DNAT --to $ADM
 ##################
 
 # Allow DNS from docker0 to internet
-iptables -A FORWARD -i $DOCKER0 -o $INTERNET -p udp -s $DOCKER_SUBNET --dport 53 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
-iptables -A FORWARD -i $DOCKER0 -o $INTERNET -p tcp -s $DOCKER_SUBNET --dport 53 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
-iptables -A FORWARD -i $INTERNET -o $DOCKER0 -p udp -d $DOCKER_SUBNET --sport 53 -m state --state ESTABLISHED,RELATED -j ACCEPT
-iptables -A FORWARD -i $INTERNET -o $DOCKER0 -p tcp -d $DOCKER_SUBNET --sport 53 -m state --state ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -i $DOCKER0 -o $INTERNET -p udp -s $DOCKER0_SUBNET --dport 53 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -i $DOCKER0 -o $INTERNET -p tcp -s $DOCKER0_SUBNET --dport 53 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -i $INTERNET -o $DOCKER0 -p udp -d $DOCKER0_SUBNET --sport 53 -m state --state ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -i $INTERNET -o $DOCKER0 -p tcp -d $DOCKER0_SUBNET --sport 53 -m state --state ESTABLISHED,RELATED -j ACCEPT
 
 # Allow HTTP from docker0 to internet
-iptables -A FORWARD -i $DOCKER0 -o $INTERNET -p tcp -s $DOCKER_SUBNET --dport 80 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
-iptables -A FORWARD -i $INTERNET -o $DOCKER0 -p tcp -d $DOCKER_SUBNET --sport 80 -m state --state ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -i $DOCKER0 -o $INTERNET -p tcp -s $DOCKER0_SUBNET --dport 80 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -i $INTERNET -o $DOCKER0 -p tcp -d $DOCKER0_SUBNET --sport 80 -m state --state ESTABLISHED,RELATED -j ACCEPT
 
 # Allow HTTPS from docker0 to internet
-iptables -A FORWARD -i $DOCKER0 -o $INTERNET -p tcp -s $DOCKER_SUBNET --dport 443 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
-iptables -A FORWARD -i $INTERNET -o $DOCKER0 -p tcp -d $DOCKER_SUBNET --sport 443 -m state --state ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -i $DOCKER0 -o $INTERNET -p tcp -s $DOCKER0_SUBNET --dport 443 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -i $INTERNET -o $DOCKER0 -p tcp -d $DOCKER0_SUBNET --sport 443 -m state --state ESTABLISHED,RELATED -j ACCEPT
 
 ######################
 ## DNS <-> INTERNET ##
@@ -193,4 +194,3 @@ iptables -A FORWARD -i $INTERNET -o $LAN -p tcp -d $LAN_SUBNET --sport 443 -m st
 # Allow HTTP from internet to employee-1
 iptables -A FORWARD -i $INTERNET -p tcp -d $ADMIN_1 --dport 4022 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
 iptables -A FORWARD -o $INTERNET -p tcp -s $ADMIN_1 --sport 4022 -m state --state ESTABLISHED,RELATED -j ACCEPT
-
