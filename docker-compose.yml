@@ -50,7 +50,6 @@ services:
       - MYSQL_DATABASE=b2b
       - MYSQL_ROOT_PASSWORD=true
     volumes:
-      - /srv/docker/db:/var/log/mysql:rw
       - /etc/localtime:/etc/localtime:ro
     networks:
       production:
