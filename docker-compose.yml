@@ -57,6 +57,25 @@ services:
       production:
         ipv4_address: 10.40.0.13
 
+  mail:
+    container_name: mail
+    hostname: mail
+    domainname: wt6.ephec-ti.be
+    image: tvial/docker-mailserver:latest
+    environment:
+      - ENABLE_SPAMASSASSIN=1
+      - ENABLE_CLAMAV=1
+      - ENABLE_POSTGREY=1
+      - ONE_DIR=1
+    volumes:
+      - ./mail/configFiles/:/tmp/docker-mailserver/
+      - /srv/docker/mail/data:/var/mail:rw
+      - /srv/docker/mail/state:/var/mail-state:rw
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      production:
+        ipv4_address: 10.40.0.20
+
   # DNS
   extern-dns-cache:
     container_name: extern-dns-cache
