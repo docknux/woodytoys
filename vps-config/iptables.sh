@@ -95,9 +95,9 @@ iptables -t nat -A PREROUTING -i $INTERNET -p tcp --dport 80 -j DNAT --to $APACH
 # Forward port 4022 to employee-1
 iptables -t nat -A PREROUTING -i $INTERNET -p tcp --dport 4022 -j DNAT --to $ADMIN_1
 
-##################
-## DOCKER BUILD ##
-##################
+##########################
+## DOCKER BUILD NETWORK ##
+##########################
 
 # Allow DNS from docker0 to internet
 iptables -A FORWARD -i $DOCKER0 -o $INTERNET -p udp -s $DOCKER0_SUBNET --dport 53 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
