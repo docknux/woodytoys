@@ -96,7 +96,6 @@ services:
     volumes:
       - ./squid/configFiles/squid.conf:/etc/squid3/squid.conf:ro
       - ./squid/configFiles/denydomain:/etc/squid3/denydomain:ro
-      - ./squid/configFiles/users:/etc/squid3/users:rw
       - /srv/docker/squid/cache:/var/spool/squid3:rw
       - /srv/docker/squid/logs:/var/log/squid3:rw
       - /etc/localtime:/etc/localtime:ro
