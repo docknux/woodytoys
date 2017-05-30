@@ -17,6 +17,7 @@ services:
     container_name: apache-proxy
     image: docknux/woodytoys-apache-proxy
     volumes:
+      - /srv/docker/apache:/usr/local/apache2/logs:rw
       - /etc/localtime:/etc/localtime:ro
     networks:
       production:
