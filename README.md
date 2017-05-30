@@ -20,7 +20,7 @@ For this, simply a config file for the docker.service of systemd.
 
 1. Create a `docker.service.d` folder in `/etc/systemd/`.
 
-```bash
+```
 # mkdir /etc/systemd/system/docker.service.d
 ```
 
@@ -34,13 +34,13 @@ ExecStart=/usr/bin/docker daemon -H fd:// --iptables=false
 
 3. Reload systemd manager configuration
 
-```bash
+```
 # systemctl daemon-reload
 ```
 
 4. Relaod `docker.service`
 
-```bash
+```
 # systemctl restart docker
 ```
 
@@ -57,7 +57,7 @@ Moreover as we only work with IPv4, we avoid security gap with IPv6.
 
 1. Launch `docker-compose` command for create all containers and networks associated.
 
-```bash
+```
 $ git clone https://github.com/docknux/woodytoys.git
 $ cd woodytoys/
 $ docker-compose up -d
@@ -65,7 +65,7 @@ $ docker-compose up -d
 
 2. Find the name of the internet network interface and the three new network interfaces created by Docker.
 
-```bash
+```
 $ ip addr show
 ```
 
@@ -80,13 +80,13 @@ INTERNET="<to update>"
 
 4. Launch the `vps-config/iptables.sh` script to enable iptables
 
-```bash
+```
 # vps-config/iptables.sh
 ```
 
 5. Check that all containers are up
 
-```bash
+```
 $ docker ps -a
 ```
 
