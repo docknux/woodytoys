@@ -6,7 +6,7 @@ WORKDIR /usr/local/apache2
 
 # Enable rewrite, proxy and proxy_http modules
 RUN set -x \
-    && sed -i 's/^#LoadModule rewrite_module modules/mod_rewrite.so/LoadModule rewrite_module modules/mod_rewrite.so/' conf/httpd.conf \
+    && sed -i 's/^#LoadModule rewrite_module modules\/mod_rewrite.so/LoadModule rewrite_module modules\/mod_rewrite.so/' conf/httpd.conf \
     && sed -i 's/^#LoadModule proxy_module/LoadModule proxy_module/' conf/httpd.conf \
     && sed -i 's/^#LoadModule proxy_http_module/LoadModule proxy_http_module/' conf/httpd.conf
 
