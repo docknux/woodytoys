@@ -8,12 +8,6 @@ RUN set -x \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y openssh-server htop iproute2 moreutils ssh nano vim net-tools dnsutils iputils-ping telnet alpine \
     && rm -rf /var/lib/apt/lists/*
 
-# Config sshd
-RUN set -x \
-    && adduser --shell /bin/bash --disabled-password test \
-    && echo "test:test" | chpasswd \
-    && mkdir /var/run/sshd
-
 # Set environment variables for squid proxy
 ENV http_proxy=http://squid.wt6.ephec-ti.be:3128/ \
     https_proxy=http://squid.wt6.ephec-ti.be:3128/ \
