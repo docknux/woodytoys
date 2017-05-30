@@ -11,7 +11,7 @@ RUN set -x \
 
 # Set default ServerAdmin and load virtualhost configurations
 RUN set -x \
-    && sed -i 's/^ServerAdmin you@example.com/ServerAdmin webmaster@wt6.ephec-ti.com/' conf/httpd.conf \
+    && sed -i 's/^ServerAdmin you@example.com/ServerAdmin sysadmin@wt6.ephec-ti.com/' conf/httpd.conf \
     && sed -i 's/^#Include conf\/extra\/httpd-vhosts.conf/IncludeOptional conf\/vhosts\/*.conf/' conf/httpd.conf \
     && mkdir conf/vhosts
 
