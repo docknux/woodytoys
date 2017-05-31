@@ -99,6 +99,9 @@ iptables -t nat -A PREROUTING -i $INTERNET -p tcp --dport 143 -j DNAT --to $MAIL
 # Forward port 80 to apache-proxy
 iptables -t nat -A PREROUTING -i $INTERNET -p tcp --dport 80 -j DNAT --to $APACHE_PROXY
 
+# Forward port 443 to apache-proxy
+iptables -t nat -A PREROUTING -i $INTERNET -p tcp --dport 443 -j DNAT --to $APACHE_PROXY
+
 # Forward port 4022 to employee-1
 iptables -t nat -A PREROUTING -i $INTERNET -p tcp --dport 4022 -j DNAT --to $ADMIN_1
 
