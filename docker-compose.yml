@@ -22,6 +22,7 @@ services:
     domainname: wt6.ephec-ti.be
     image: docknux/woodytoys-apache-proxy
     volumes:
+      - /etc/letsencrypt/live/wt6.ephec-ti.be:/var/letsencrypt/wt6.ephec-ti.be:ro
       - /srv/docker/apache/logs:/usr/local/apache2/logs:rw
       - /etc/localtime:/etc/localtime:ro
     networks:
