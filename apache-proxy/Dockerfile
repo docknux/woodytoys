@@ -22,6 +22,11 @@ RUN set -x \
     && sed -i 's/^#LoadModule proxy_module/LoadModule proxy_module/' conf/httpd.conf \
     && sed -i 's/^#LoadModule proxy_http_module/LoadModule proxy_http_module/' conf/httpd.conf
 
+# Comment lines about inexistent ssl certificates in conf/extra/httpd-ssl.conf 
+RUN set -x \
+    && sed -i 's/^SSLCertificateFile "\/usr\/local\/apache2\/conf\/server.crt"/#SSLCertificateFile "\/usr\/local\/apache2\/conf\/server.crt"/' conf/extra/httpd-ssl.conf \
+    && sed -i 's/^SSLCertificateKeyFile "\/usr\/local\/apache2\/conf\/server.key"/#SSLCertificateKeyFile "\/usr\/local\/apache2\/conf\/server.key"/' conf/extra/httpd-ssl.conf
+
 # Set default ServerAdmin and load virtualhost configurations
 RUN set -x \
     && sed -i 's/^ServerAdmin you@example.com/ServerAdmin sysadmin@wt6.ephec-ti.com/' conf/httpd.conf \
