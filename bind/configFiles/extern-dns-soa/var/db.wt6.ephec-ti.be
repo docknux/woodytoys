@@ -3,7 +3,7 @@ $ORIGIN wt6.ephec-ti.be.
 
 ; SOA
 @           IN      SOA     ns1.wt6-ephec-ti.be     sysadmin.wt6.ephec-ti.be (
-                                    2017053102  ; serial
+                                    2017053103  ; serial
                                     86400       ; refesh (1 day)
                                     3600        ; retry (1 hour)
                                     3600000     ; expire (41 days)
@@ -25,6 +25,9 @@ mail._domainkey	    IN      TXT     ( "v=DKIM1; k=rsa; "
 ; SPF record
 @           IN      SPF     "v=spf1 mx ~all"
 @           IN      TXT     "v=spf1 mx ~all"
+
+; Voip Server
+voip        IN      A       151.80.119.135
 
 ; Web Domain
 @           IN      A       151.80.119.135
