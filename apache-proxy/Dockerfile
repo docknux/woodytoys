@@ -10,6 +10,10 @@ RUN set -x \
 # ServerRoot of apache
 WORKDIR /usr/local/apache2
 
+# Include httpd-ssl.conf for enable HTTPS
+RUN set -x \
+    && sed -i 's/^#Include conf\/extra\/httpd-ssl.conf/Include conf\/extra\/httpd-ssl.conf/' conf/httpd.conf
+
 # Enable ssl, rewrite, proxy and proxy_http modules
 RUN set -x \
     && sed -i 's/^#LoadModule ssl_module modules\/mod_ssl.so/LoadModule ssl_module modules\/mod_ssl.so/' conf/httpd.conf \
