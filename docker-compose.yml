@@ -4,6 +4,8 @@ services:
   # DMZ
   local-dns-soa:
     container_name: local-dns-soa
+    hostname: local-dns-soa
+    domainname: wt6.ephec-ti.be
     image: docknux/woodytoys-bind
     volumes:
       - ./bind/configFiles/local-dns-soa/etc/named.conf:/etc/bind/named.conf:ro
@@ -15,6 +17,8 @@ services:
         ipv4_address: 10.40.0.5
   apache-proxy:
     container_name: apache-proxy
+    hostname:  apache-proxy
+    domainname: wt6.ephec-ti.be
     image: docknux/woodytoys-apache-proxy
     volumes:
       - /srv/docker/apache/logs:/usr/local/apache2/logs:rw
@@ -24,7 +28,8 @@ services:
         ipv4_address: 10.40.0.10
   www:
     container_name: www
-    hostname: www.wt6.ephec-ti.be
+    hostname: www
+    domainname: wt6.ephec-ti.be
     image: docknux/woodytoys-www
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -33,7 +38,8 @@ services:
         ipv4_address: 10.40.0.11
   b2b:
     container_name: b2b
-    hostname: b2b.wt6.ephec-ti.be
+    hostname: b2b
+    domainname: wt6.ephec-ti.be
     image: docknux/woodytoys-b2b
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -42,7 +48,8 @@ services:
         ipv4_address: 10.40.0.12
   db:
     container_name: db
-    hostname: db.wt6.ephec-ti.be
+    hostname: db
+    domainname: wt6.ephec-ti.be
     image: mysql
     environment:
       - MYSQL_USER=b2b
@@ -79,6 +86,8 @@ services:
   # DNS
   extern-dns-cache:
     container_name: extern-dns-cache
+    hostname: extern-dns-cache
+    domainname: wt6.ephec-ti.be
     image: docknux/woodytoys-bind
     volumes:
       - ./bind/configFiles/extern-dns-cache/etc/named.conf:/etc/bind/named.conf:ro
@@ -89,6 +98,8 @@ services:
         ipv4_address: 10.50.0.5
   extern-dns-soa:
     container_name: extern-dns-soa
+    hostname: extern-dns-soa
+    domainname: wt6.ephec-ti.be
     image: docknux/woodytoys-bind
     volumes:
       - ./bind/configFiles/extern-dns-soa/etc/named.conf:/etc/bind/named.conf:ro
@@ -102,6 +113,8 @@ services:
   # LAN
   local-dns-cache:
     container_name: local-dns-cache
+    hostname: local-dns-cache
+    domainname: wt6.ephec-ti.be
     image: docknux/woodytoys-bind
     volumes:
       - ./bind/configFiles/local-dns-cache/etc/named.conf:/etc/bind/named.conf:ro
@@ -113,7 +126,8 @@ services:
         ipv4_address: 10.0.0.5
   squid:
     container_name: squid
-    hostname: squid.wt6.ephec-ti.be
+    hostname: squid
+    domainname: wt6.ephec-ti.be
     image: docknux/woodytoys-squid
     volumes:
       - ./squid/configFiles/squid.conf:/etc/squid3/squid.conf:ro
@@ -127,7 +141,8 @@ services:
         ipv4_address: 10.0.0.10
   intranet:
     container_name: intranet
-    hostname: intranet.wt6.ephec-ti.be
+    hostname: intranet
+    domainname: wt6.ephec-ti.be
     image: docknux/woodytoys-intranet
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -137,6 +152,8 @@ services:
         ipv4_address: 10.0.0.15
   employee-1:
     container_name: employee-1
+    hostname: employee-1
+    domainname: wt6.ephec-ti.be
     image: docknux/woodytoys-desktop
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -146,6 +163,8 @@ services:
         ipv4_address: 10.0.0.42
   admin-1:
     container_name: admin-1
+    hostname: admin-1
+    domainname: wt6.ephec-ti.be
     image: docknux/woodytoys-desktop
     volumes:
       - /etc/localtime:/etc/localtime:ro
