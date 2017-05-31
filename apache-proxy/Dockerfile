@@ -10,22 +10,16 @@ RUN set -x \
 # ServerRoot of apache
 WORKDIR /usr/local/apache2
 
-# Include httpd-ssl.conf for enable HTTPS
-RUN set -x \
-    && sed -i 's/^#Include conf\/extra\/httpd-ssl.conf/Include conf\/extra\/httpd-ssl.conf/' conf/httpd.conf
-
-# Enable ssl, socache_shmcb, rewrite, proxy and proxy_http modules
+# Enable ssl, rewrite, proxy and proxy_http modules
 RUN set -x \
     && sed -i 's/^#LoadModule ssl_module modules\/mod_ssl.so/LoadModule ssl_module modules\/mod_ssl.so/' conf/httpd.conf \
-    && sed -i 's/^#LoadModule socache_shmcb_module modules\/mod_socache_shmcb.so/LoadModule socache_shmcb_module modules\/mod_socache_shmcb.so/' conf/httpd.conf \
     && sed -i 's/^#LoadModule rewrite_module modules\/mod_rewrite.so/LoadModule rewrite_module modules\/mod_rewrite.so/' conf/httpd.conf \
     && sed -i 's/^#LoadModule proxy_module/LoadModule proxy_module/' conf/httpd.conf \
     && sed -i 's/^#LoadModule proxy_http_module/LoadModule proxy_http_module/' conf/httpd.conf
 
-# Comment lines about inexistent ssl certificates in conf/extra/httpd-ssl.conf 
+# Enable Listen on port 443
 RUN set -x \
-    && sed -i 's/^SSLCertificateFile "\/usr\/local\/apache2\/conf\/server.crt"/#SSLCertificateFile "\/usr\/local\/apache2\/conf\/server.crt"/' conf/extra/httpd-ssl.conf \
-    && sed -i 's/^SSLCertificateKeyFile "\/usr\/local\/apache2\/conf\/server.key"/#SSLCertificateKeyFile "\/usr\/local\/apache2\/conf\/server.key"/' conf/extra/httpd-ssl.conf
+    && sed -i '/test/a<IfModule ssl_module>\n\tListen 443\n</IfModule>' conf/httpd.conf
 
 # Set default ServerAdmin and load virtualhost configurations
 RUN set -x \
