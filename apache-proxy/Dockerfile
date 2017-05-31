@@ -26,4 +26,6 @@ RUN set -x \
 COPY vhosts/*.conf conf/vhosts/
 
 EXPOSE 80
+EXPOSE 443
+
 CMD ["httpd-foreground"]
