@@ -3,7 +3,7 @@ $ORIGIN wt6.ephec-ti.be.
 
 ; SOA
 @           IN      SOA     ns1.wt6-ephec-ti.be     sysadmin.wt6.ephec-ti.be (
-                                    2017053001  ; serial
+                                    2017053101  ; serial
                                     86400       ; refesh (1 day)
                                     3600        ; retry (1 hour)
                                     3600000     ; expire (41 days)
