@@ -21,6 +21,7 @@ LOCAL_DNS_CACHE="10.0.0.5"
 LOCAL_DNS_SOA="10.40.0.5"
 
 APACHE_PROXY="10.40.0.10"
+MAIL="10.40.0.20"
 SQUID_PROXY="10.0.0.10"
 ADMIN_1="10.0.0.80"
 
@@ -89,6 +90,12 @@ iptables -A OUTPUT -o $INTERNET -p tcp --dport 443 -m state --state NEW,ESTABLIS
 iptables -t nat -A PREROUTING -i $INTERNET -p udp --dport 53 -j DNAT --to $EXTERN_DNS_SOA
 iptables -t nat -A PREROUTING -i $INTERNET -p tcp --dport 53 -j DNAT --to $EXTERN_DNS_SOA
 
+# Forward port 25 to mail
+iptables -t nat -A PREROUTING -i $INTERNET -p tcp --dport 25 -j DNAT --to $MAIL
+
+# Forward port 143 to mail
+iptables -t nat -A PREROUTING -i $INTERNET -p tcp --dport 143 -j DNAT --to $MAIL
+
 # Forward port 80 to apache-proxy
 iptables -t nat -A PREROUTING -i $INTERNET -p tcp --dport 80 -j DNAT --to $APACHE_PROXY
 
@@ -151,6 +158,18 @@ iptables -A FORWARD -i $INTERNET -o $DMZ -p tcp -d $DMZ_SUBNET --sport 443 -m st
 iptables -A FORWARD -i $INTERNET -p tcp -d $APACHE_PROXY --dport 80 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
 iptables -A FORWARD -o $INTERNET -p tcp -s $APACHE_PROXY --sport 80 -m state --state ESTABLISHED,RELATED -j ACCEPT
 
+# Allow HTTPS from internet to apache-proxy
+iptables -A FORWARD -i $INTERNET -p tcp -d $APACHE_PROXY --dport 443 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -o $INTERNET -p tcp -s $APACHE_PROXY --sport 443 -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+# Allow SMTP from internet to apache-proxy
+iptables -A FORWARD -i $INTERNET -p tcp -d $MAIL --dport 25 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -o $INTERNET -p tcp -s $MAIL --sport 25 -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+# Allow IMAP from internet to apache-proxy
+iptables -A FORWARD -i $INTERNET -p tcp -d $MAIL --dport 143 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -o $INTERNET -p tcp -s $MAIL --sport 143 -m state --state ESTABLISHED,RELATED -j ACCEPT
+
 #################
 ## LAN <-> DNS ##
 #################
@@ -171,26 +190,34 @@ iptables -A FORWARD -i $LAN -o $DMZ -p tcp -s $LOCAL_DNS_CACHE -d $LOCAL_DNS_SOA
 iptables -A FORWARD -i $DMZ -o $LAN -p udp -s $LOCAL_DNS_SOA -d $LOCAL_DNS_CACHE --sport 53 -m state --state ESTABLISHED,RELATED -j ACCEPT
 iptables -A FORWARD -i $DMZ -o $LAN -p tcp -s $LOCAL_DNS_SOA -d $LOCAL_DNS_CACHE --sport 53 -m state --state ESTABLISHED,RELATED -j ACCEPT
 
-# Allow HTTP from lan_subnet to apache_proxy
+# Allow HTTP from squid_proxy to apache_proxy
 iptables -A FORWARD -i $LAN -o $DMZ -p tcp -s $SQUID_PROXY -d $APACHE_PROXY --dport 80 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
 iptables -A FORWARD -i $DMZ -o $LAN -p tcp -s $APACHE_PROXY -d $SQUID_PROXY --sport 80 -m state --state ESTABLISHED,RELATED -j ACCEPT
 
-# Allow HTTPS from lan_subnet to apache_proxy
+# Allow HTTPS from squid_proxy to apache_proxy
 iptables -A FORWARD -i $LAN -o $DMZ -p tcp -s $SQUID_PROXY -d $APACHE_PROXY --dport 443 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
 iptables -A FORWARD -i $DMZ -o $LAN -p tcp -s $APACHE_PROXY -d $SQUID_PROXY --sport 443 -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+# Allow SMTP from lan_subnet to mail
+iptables -A FORWARD -i $LAN -o $DMZ -p tcp -s $LAN_SUBNET -d $MAIL --dport 25 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -i $DMZ -o $LAN -p tcp -s $MAIL -d $LAN_SUBNET --sport 25 -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+# Allow IMAP from lan_subnet to mail
+iptables -A FORWARD -i $LAN -o $DMZ -p tcp -s $LAN_SUBNET -d $MAIL --dport 143 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -i $DMZ -o $LAN -p tcp -s $MAIL -d $LAN_SUBNET --sport 143 -m state --state ESTABLISHED,RELATED -j ACCEPT
 
 ######################
 ## LAN <-> INTERNET ##
 ######################
 
-# Allow HTTP from lan_subnet to internet
-iptables -A FORWARD -i $LAN -o $INTERNET -p tcp -s $LAN_SUBNET --dport 80 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
-iptables -A FORWARD -i $INTERNET -o $LAN -p tcp -d $LAN_SUBNET --sport 80 -m state --state ESTABLISHED,RELATED -j ACCEPT
+# Allow HTTP from squid_proxy to internet
+iptables -A FORWARD -i $LAN -o $INTERNET -p tcp -s $SQUID_PROXY --dport 80 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -i $INTERNET -o $LAN -p tcp -d $SQUID_PROXY --sport 80 -m state --state ESTABLISHED,RELATED -j ACCEPT
 
-# Allow HTTPS from lan_subnet to internet
-iptables -A FORWARD -i $LAN -o $INTERNET -p tcp -s $LAN_SUBNET --dport 443 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
-iptables -A FORWARD -i $INTERNET -o $LAN -p tcp -d $LAN_SUBNET --sport 443 -m state --state ESTABLISHED,RELATED -j ACCEPT
+# Allow HTTPS from squid_proxy to internet
+iptables -A FORWARD -i $LAN -o $INTERNET -p tcp -s $SQUID_PROXY --dport 443 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -i $INTERNET -o $LAN -p tcp -d $SQUID_PROXY --sport 443 -m state --state ESTABLISHED,RELATED -j ACCEPT
 
-# Allow HTTP from internet to employee-1
+# Allow SSH tunnel from internet to employee-1
 iptables -A FORWARD -i $INTERNET -p tcp -d $ADMIN_1 --dport 4022 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
 iptables -A FORWARD -o $INTERNET -p tcp -s $ADMIN_1 --sport 4022 -m state --state ESTABLISHED,RELATED -j ACCEPT
