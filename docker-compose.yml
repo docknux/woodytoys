@@ -80,7 +80,7 @@ services:
       - ENABLE_POSTGREY=1
       - ONE_DIR=1
     volumes:
-      - ./mail/configFiles/:/tmp/docker-mailserver/
+      - ./mail/config/:/tmp/docker-mailserver/
       - /srv/docker/mail/data:/var/mail:rw
       - /srv/docker/mail/state:/var/mail-state:rw
       - /etc/localtime:/etc/localtime:ro
