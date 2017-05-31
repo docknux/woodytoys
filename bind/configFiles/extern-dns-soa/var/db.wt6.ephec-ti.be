@@ -20,7 +20,7 @@ mail    IN      A       151.80.119.135
 
 ; DKIM key mail
 mail._domainkey	    IN      TXT     ( "v=DKIM1; k=rsa; "
-	  "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDJpHXqnDU3ACWEfTrSgykMm9QIxW9u+xjahUR78eanqMZBVoq3sMMpWOQdh9jlzGjohVZuYm/0vhrlbvOqC7eFoLQ2SMVZYI8qf49djCgcPfMjfl/57a16gdFpOpJbLV65hNCyZM1s8VaUe0MfmL9qL9ZuGjQ+1jcoqhCI0mo5cQIDAQAB" )
+	  "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDKTpC0nl5mUNUh7VdxLdUd6lHkH5I2u0/HiVu1xqlMaj8QZhhN2RihxiXQuOw86/S/to1tmxXMlEwGbtmx96pZ/8HNkIF5J+BueZG9dp1uExKXLOnhw2Jp1ELlxtvfVL0HTLJ1+7eK2Q6IrTHGORF1bPNbdvFEWq6FwRGI7k1BfQIDAQAB" )
 
 ; SPF record
 @           IN      SPF     "v=spf1 mx ~all"
