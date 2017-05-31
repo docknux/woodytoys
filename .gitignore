@@ -90,5 +90,12 @@ xcuserdata/
 *.xccheckout
 *.xcscmblueprint
 
+## Perso
+
+### Mail
+mail/config/opendkim/*
+mail/config/postfix-accounts.cf
+mail/config/postfix-virtual.cf
+
 # End of https://www.gitignore.io/api/windows,linux,macos,xcode
 
