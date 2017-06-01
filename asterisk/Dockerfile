@@ -1,11 +1,14 @@
 FROM ubuntu:latest
 MAINTAINER Quentin Peten <q.peten@students.ephec.be>
 
-RUN apt-get update && apt-get upgrade -y
-RUN apt-get install -y asterisk
+#Install asterisk
+RUN set -x \
+    && apt-get update \
+    && apt-get upgrade -y \
+    && DEBIAN_FRONTEND=noninteractive apt-get install -y asterisk \
+    && rm -rf /var/lib/apt/lists/*
 
-EXPOSE 10000-10009
-
-VOLUME /etc/asterisk
+EXPOSE 5060/tcp
+EXPOSE 5060/udp
 
 CMD /usr/sbin/asterisk -vgc
