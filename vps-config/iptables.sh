@@ -66,12 +66,12 @@ iptables -A INPUT  -i $INTERNET -p icmp -j ACCEPT
 iptables -A OUTPUT -o $INTERNET -p icmp -j ACCEPT
 
 # Allow input SSH
-iptables -A INPUT  -i $INTERNET -p tcp --dport 22 -j ACCEPT
-iptables -A OUTPUT -o $INTERNET -p tcp --sport 22 -j ACCEPT
+iptables -A INPUT  -i $INTERNET -p tcp --dport 22 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+iptables -A OUTPUT -o $INTERNET -p tcp --sport 22 -m state --state ESTABLISHED,RELATED -j ACCEPT
 
 # Allow output SSH
-iptables -A INPUT  -i $INTERNET -p tcp --sport 22 -j ACCEPT
-iptables -A OUTPUT -o $INTERNET -p tcp --dport 22 -j ACCEPT
+iptables -A INPUT  -i $INTERNET -p tcp --sport 22 -m state --state ESTABLISHED,RELATED -j ACCEPT
+iptables -A OUTPUT -o $INTERNET -p tcp --dport 22 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
 
 # Allow output DNS
 iptables -A INPUT  -i $INTERNET -p udp --sport 53 -m state --state ESTABLISHED,RELATED -j ACCEPT
