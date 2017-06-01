@@ -15,7 +15,7 @@ We had to deloy this configuration on two vps hosted by OVH. They were both runn
 ## Configuration
 ### Docker
 
-We need to disable iptables for Docker to avoid to prevent them interfered with ours.
+We need to disable iptables from Docker to avoid to prevent them interfered with ours.
 For this, simply a config file for the docker.service of systemd.
 
 1. Create a `docker.service.d` folder in `/etc/systemd/`.
@@ -55,7 +55,7 @@ Moreover as we only work with IPv4, we avoid security gap with IPv6.
 
 ## Installation
 
-1. Launch `docker-compose` command for create all containers and networks associated.
+1. Launch `docker-compose` command to create all containers and networks.
 
 ```
 $ git clone https://github.com/docknux/woodytoys.git
@@ -78,7 +78,7 @@ DNS="<to update>"
 INTERNET="<to update>"
 ```
 
-4. Launch the `vps-config/iptables.sh` script to enable iptables
+4. Launch the `vps-config/iptables.sh` script to enable iptables.
 
 ```
 # vps-config/iptables.sh
@@ -90,7 +90,7 @@ INTERNET="<to update>"
 $ docker ps -a
 ```
 
-6. Test if all goes well in following the [wiki](https://github.com/docknux/woodytoys/wiki). And, it's okay, you can make everything persist.
+6. Test if all goes well in following the [wiki](https://github.com/docknux/woodytoys/wiki). And, if it's okay, you can make everything persist between reboots.
 
 ```
 TODO: iptables and docker
