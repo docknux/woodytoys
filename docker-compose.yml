@@ -90,7 +90,6 @@ services:
     networks:
       production:
         ipv4_address: 10.40.0.20
-    restart: always
 
   voip:
     container_name: voip
@@ -104,11 +103,7 @@ services:
       production:
         ipv4_address: 10.40.0.30
     logging:
-      driver: json-file
-      options:
-        max-file: 1
-        max-size: 10m
-    restart: always
+      driver: none
 
   # DNS
   extern-dns-cache:
