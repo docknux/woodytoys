@@ -22,6 +22,7 @@ LOCAL_DNS_SOA="10.40.0.5"
 
 APACHE_PROXY="10.40.0.10"
 MAIL="10.40.0.20"
+ASTERISK="10.40.0.30"
 SQUID_PROXY="10.0.0.10"
 ADMIN_1="10.0.0.80"
 
@@ -102,6 +103,10 @@ iptables -t nat -A PREROUTING -i $INTERNET -p tcp --dport 80 -j DNAT --to $APACH
 # Forward port 443 to apache-proxy
 iptables -t nat -A PREROUTING -i $INTERNET -p tcp --dport 443 -j DNAT --to $APACHE_PROXY
 
+# Forward port 5060 to extern-dns-soa
+iptables -t nat -A PREROUTING -i $INTERNET -p udp --dport 5060 -j DNAT --to $ASTERISK
+iptables -t nat -A PREROUTING -i $INTERNET -p tcp --dport 5060 -j DNAT --to $ASTERISK
+
 # Forward port 4022 to employee-1
 iptables -t nat -A PREROUTING -i $INTERNET -p tcp --dport 4022 -j DNAT --to $ADMIN_1
 
@@ -172,6 +177,12 @@ iptables -A FORWARD -o $INTERNET -p tcp -s $MAIL --sport 25 -m state --state EST
 # Allow IMAP from internet to apache-proxy
 iptables -A FORWARD -i $INTERNET -p tcp -d $MAIL --dport 143 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
 iptables -A FORWARD -o $INTERNET -p tcp -s $MAIL --sport 143 -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+# Allow SIP from internet to asterisk
+iptables -A FORWARD -i $INTERNET -p udp -d $ASTERISK --dport 5060 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -i $INTERNET -p tcp -d $ASTERISK --dport 5060 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -o $INTERNET -p udp -s $ASTERISK --sport 5060 -m state --state ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -o $INTERNET -p tcp -s $ASTERISK --sport 5060 -m state --state ESTABLISHED,RELATED -j ACCEPT
 
 #################
 ## LAN <-> DNS ##
