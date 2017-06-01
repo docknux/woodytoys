@@ -93,8 +93,11 @@ iptables -t nat -A PREROUTING -i $INTERNET -p tcp --dport 53 -j DNAT --to $EXTER
 # Forward port 25 to mail
 iptables -t nat -A PREROUTING -i $INTERNET -p tcp --dport 25 -j DNAT --to $MAIL
 
-# Forward port 143 to mail
-iptables -t nat -A PREROUTING -i $INTERNET -p tcp --dport 143 -j DNAT --to $MAIL
+# Forward port 587 to mail
+iptables -t nat -A PREROUTING -i $INTERNET -p tcp --dport 587 -j DNAT --to $MAIL
+
+# Forward port 993 to mail
+iptables -t nat -A PREROUTING -i $INTERNET -p tcp --dport 993 -j DNAT --to $MAIL
 
 # Forward port 80 to apache-proxy
 iptables -t nat -A PREROUTING -i $INTERNET -p tcp --dport 80 -j DNAT --to $APACHE_PROXY
@@ -165,13 +168,23 @@ iptables -A FORWARD -o $INTERNET -p tcp -s $APACHE_PROXY --sport 80 -m state --s
 iptables -A FORWARD -i $INTERNET -p tcp -d $APACHE_PROXY --dport 443 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
 iptables -A FORWARD -o $INTERNET -p tcp -s $APACHE_PROXY --sport 443 -m state --state ESTABLISHED,RELATED -j ACCEPT
 
-# Allow SMTP from internet to apache-proxy
+# Allow SMTP from internet to mail
 iptables -A FORWARD -i $INTERNET -p tcp -d $MAIL --dport 25 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
 iptables -A FORWARD -o $INTERNET -p tcp -s $MAIL --sport 25 -m state --state ESTABLISHED,RELATED -j ACCEPT
 
-# Allow IMAP from internet to apache-proxy
-iptables -A FORWARD -i $INTERNET -p tcp -d $MAIL --dport 143 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
-iptables -A FORWARD -o $INTERNET -p tcp -s $MAIL --sport 143 -m state --state ESTABLISHED,RELATED -j ACCEPT
+# Allow SMTP (TLS) from internet to mail
+iptables -A FORWARD -i $INTERNET -p tcp -d $MAIL --dport 587 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -o $INTERNET -p tcp -s $MAIL --sport 587 -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+# Allow IMAP (TLS) from internet to mail
+iptables -A FORWARD -i $INTERNET -p tcp -d $MAIL --dport 993 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -o $INTERNET -p tcp -s $MAIL --sport 993 -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+# Allow SMTP from mail to internet
+iptables -A FORWARD -i $DMZ -o $INTERNET -p tcp -s $MAIL --dport 25  -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -i $DMZ -o $INTERNET -p tcp -s $MAIL --dport 587 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -i $INTERNET -o $DMZ -p tcp -d $MAIL --sport 25  -m state --state ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -i $INTERNET -o $DMZ -p tcp -d $MAIL --sport 587 -m state --state ESTABLISHED,RELATED -j ACCEPT
 
 #################
 ## LAN <-> DNS ##
@@ -205,9 +218,13 @@ iptables -A FORWARD -i $DMZ -o $LAN -p tcp -s $APACHE_PROXY -d $SQUID_PROXY --sp
 iptables -A FORWARD -i $LAN -o $DMZ -p tcp -s $LAN_SUBNET -d $MAIL --dport 25 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
 iptables -A FORWARD -i $DMZ -o $LAN -p tcp -s $MAIL -d $LAN_SUBNET --sport 25 -m state --state ESTABLISHED,RELATED -j ACCEPT
 
+# Allow SMTP (TLS) from lan_subnet to mail
+iptables -A FORWARD -i $LAN -o $DMZ -p tcp -s $LAN_SUBNET -d $MAIL --dport 587 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -i $DMZ -o $LAN -p tcp -s $MAIL -d $LAN_SUBNET --sport 587 -m state --state ESTABLISHED,RELATED -j ACCEPT
+
 # Allow IMAP from lan_subnet to mail
-iptables -A FORWARD -i $LAN -o $DMZ -p tcp -s $LAN_SUBNET -d $MAIL --dport 143 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
-iptables -A FORWARD -i $DMZ -o $LAN -p tcp -s $MAIL -d $LAN_SUBNET --sport 143 -m state --state ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -i $LAN -o $DMZ -p tcp -s $LAN_SUBNET -d $MAIL --dport 993 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+iptables -A FORWARD -i $DMZ -o $LAN -p tcp -s $MAIL -d $LAN_SUBNET --sport 993 -m state --state ESTABLISHED,RELATED -j ACCEPT
 
 ######################
 ## LAN <-> INTERNET ##
