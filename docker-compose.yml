@@ -90,6 +90,19 @@ services:
         ipv4_address: 10.40.0.20
     restart: always
 
+  voip:
+    container_name: voip
+    hostname: voip
+    domainname: wt6.ephec-ti.be
+    image: docknux/woodytoys-asterisk
+    volumes:
+      - ./asterisk/configFiles/:/etc/asterisk:ro
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      production:
+        ipv4_address: 10.40.0.30
+    restart: always
+
   # DNS
   extern-dns-cache:
     container_name: extern-dns-cache
