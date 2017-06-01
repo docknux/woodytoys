@@ -80,8 +80,10 @@ services:
       - ENABLE_CLAMAV=1
       - ENABLE_POSTGREY=1
       - ONE_DIR=1
+      - SSL_TYPE=letsencrypt
     volumes:
       - ./mail/config:/tmp/docker-mailserver:rw
+      - /etc/letsencrypt:/etc/letsencrypt:ro
       - /srv/docker/mail/data:/var/mail:rw
       - /srv/docker/mail/state:/var/mail-state:rw
       - /etc/localtime:/etc/localtime:ro
