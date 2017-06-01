@@ -19,7 +19,7 @@ RUN set -x \
 
 # Enable Listen on port 443
 RUN set -x \
-    && sed -i '/Listen 80/a<IfModule ssl_module>\n\tListen 443\n</IfModule>' conf/httpd.conf
+    && sed -i '/Listen 80/a\nListen 443\n' conf/httpd.conf
 
 # Set default ServerAdmin and load virtualhost configurations
 RUN set -x \
