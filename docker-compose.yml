@@ -90,11 +90,6 @@ services:
     networks:
       production:
         ipv4_address: 10.40.0.20
-    logging:
-      driver: json-file
-      options:
-        max-file: 1
-        max-size: 10m
     restart: always
 
   voip:
@@ -108,6 +103,11 @@ services:
     networks:
       production:
         ipv4_address: 10.40.0.30
+    logging:
+      driver: json-file
+      options:
+        max-file: 1
+        max-size: 10m
     restart: always
 
   # DNS
