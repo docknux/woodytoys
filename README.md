@@ -118,5 +118,5 @@ $ docker ps -a
 6. Test if all goes well in following the [wiki](https://github.com/docknux/woodytoys/wiki). And, if it's okay, you can make everything persist between reboots.
 
 ```
-TODO: iptables and docker
+TODO: iptables
 ```
