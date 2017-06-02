@@ -55,7 +55,32 @@ Moreover as we only work with IPv4, we avoid security gap with IPv6.
 
 ## Installation
 
-1. Launch `docker-compose` command to create all containers and networks.
+1. Install docker (first check to see if the version in your repo is recent enough, otherwise use this method.)
+
+```
+$ sudo apt-get remove docker docker-engine
+$ sudo apt-get update
+$ sudo apt-get install \
+    linux-image-extra-$(uname -r) \
+    linux-image-extra-virtual
+$ sudo apt-get install \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+```
+Please check that the fingerprint actually is `9DC8 5822 9FC7 DD38 854A E2D8 8D81 803C 0EBF CD88`.
+```
+$ sudo add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"
+$ sudo apt-get update
+$ sudo apt-get install docker-ce
+```
+
+2. Launch `docker-compose` command to create all containers and networks.
 
 ```
 $ git clone https://github.com/docknux/woodytoys.git
@@ -63,13 +88,13 @@ $ cd woodytoys/
 $ docker-compose up -d
 ```
 
-2. Find the name of the internet network interface and the three new network interfaces created by Docker.
+3. Find the name of the internet network interface and the three new network interfaces created by Docker.
 
 ```
 $ ip addr show
 ```
 
-3. Update the 4 variables in the `vps-config/iptables.sh` with the name of interfaces.
+4. Update the 4 variables in the `vps-config/iptables.sh` with the name of interfaces.
 
 ```
 LAN="<to update>"
@@ -78,7 +103,7 @@ DNS="<to update>"
 INTERNET="<to update>"
 ```
 
-4. Launch the `vps-config/iptables.sh` script to enable iptables.
+5. Launch the `vps-config/iptables.sh` script to enable iptables.
 
 ```
 # vps-config/iptables.sh
