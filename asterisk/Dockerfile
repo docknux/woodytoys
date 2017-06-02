@@ -11,4 +11,4 @@ RUN set -x \
 EXPOSE 5060/tcp
 EXPOSE 5060/udp
 
-CMD /usr/sbin/asterisk -vgc
+CMD /usr/sbin/asterisk -vgf
