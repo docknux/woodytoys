@@ -86,6 +86,7 @@ services:
       - /etc/letsencrypt:/etc/letsencrypt:ro
       - /srv/docker/mail/data:/var/mail:rw
       - /srv/docker/mail/state:/var/mail-state:rw
+      - /srv/docker/mail/logs:/var/log/mail:rw
       - /etc/localtime:/etc/localtime:ro
     networks:
       production:
@@ -98,6 +99,7 @@ services:
     image: docknux/woodytoys-asterisk
     volumes:
       - ./asterisk/configFiles/:/etc/asterisk:ro
+      - /srv/docker/voip/logs:/var/log/asterisk:rw
       - /etc/localtime:/etc/localtime:ro
     networks:
       production:
