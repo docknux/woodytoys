@@ -114,6 +114,9 @@ iptables -t nat -A PREROUTING -i $INTERNET -p tcp --dport 443 -j DNAT --to $APAC
 iptables -t nat -A PREROUTING -i $INTERNET -p udp --dport 5060 -j DNAT --to $ASTERISK
 iptables -t nat -A PREROUTING -i $INTERNET -p tcp --dport 5060 -j DNAT --to $ASTERISK
 
+# Forward port 10000-12000 to extern-dns-soa
+iptables -t nat -A PREROUTING -i $INTERNET -p udp -m multiport --dports 10000:12000 -j DNAT --to $ASTERISK
+
 # Forward port 4022 to employee-1
 iptables -t nat -A PREROUTING -i $INTERNET -p tcp --dport 4022 -j DNAT --to $ADMIN_1
 
@@ -200,6 +203,10 @@ iptables -A FORWARD -i $INTERNET -p udp -d $ASTERISK --dport 5060 -m state --sta
 iptables -A FORWARD -i $INTERNET -p tcp -d $ASTERISK --dport 5060 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
 iptables -A FORWARD -o $INTERNET -p udp -s $ASTERISK --sport 5060 -m state --state ESTABLISHED,RELATED -j ACCEPT
 iptables -A FORWARD -o $INTERNET -p tcp -s $ASTERISK --sport 5060 -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+# Allow RTP from internet to asterisk
+iptables -A FORWARD -i $INTERNET -p udp -d $ASTERISK -m multiport --dports 10000:12000 -j ACCEPT
+iptables -A FORWARD -o $INTERNET -p udp -s $ASTERISK -m multiport --sports 10000:12000 -j ACCEPT
 
 #################
 ## LAN <-> DNS ##
