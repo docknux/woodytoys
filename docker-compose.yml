@@ -91,6 +91,7 @@ services:
     networks:
       production:
         ipv4_address: 10.40.0.20
+    restart: always
 
   voip:
     container_name: voip
@@ -109,6 +110,7 @@ services:
       options:
         max-size : "10m"
         max-file : "1"
+    restart: always
 
   # DNS
   extern-dns-cache:
