@@ -103,20 +103,29 @@ DNS="<to update>"
 INTERNET="<to update>"
 ```
 
-5. Launch the `vps-config/iptables.sh` script to enable iptables.
+5. Launch the `vps-config/letsencrypt.sh` script to generate TLS certificates.
+
+6. Launch the `vps-config/iptables.sh` script to enable iptables.
 
 ```
 # vps-config/iptables.sh
 ```
 
-5. Check that all containers are up
+7. Check that all containers are up
 
 ```
 $ docker ps -a
 ```
 
-6. Test if all goes well in following the [wiki](https://github.com/docknux/woodytoys/wiki). And, if it's okay, you can make everything persist between reboots.
+8. Test if all goes well in following the [wiki](https://github.com/docknux/woodytoys/wiki). And, if it's okay, you can make everything persist between reboots. By default, all dockers containers restart between reboots via `restart:always` in `docker-compose.yml`. For iptables you need to install `iptables-persistent`, say yes during the install for save the current rules.
 
 ```
-TODO: iptables
+# apt-get install iptables-persistent 
+```
+
+If you change `vps-config/iptables.sh`, use the following commands for save and reload the rules.
+
+```
+# netfilter-persistent save
+# netfilter-persistent reload
 ```
